@@ -6,6 +6,7 @@ Table of contents
       * [Instalisasi](#instalisasi)
       * [Pattern](#pattern)
         * [Kode](#kode)
+      * [Video](#video)
         
 <!--te-->
 
@@ -23,3 +24,6 @@ Pattern yang digunakan pada aplikasi ini adalah... karena...
 
 ### Kode
 Framework yang digunakan adalah...
+
+## Video
+Video dapat dilihat pada...
