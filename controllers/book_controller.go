@@ -4,6 +4,7 @@ import (
 	"dot-hiring-go/models"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,7 @@ func (ctrl BookController) GetAll(c *gin.Context) {
 	var data = cache.Get(BOOK_CACHE_KEY)
 
 	if data == "" {
-		if err := models.DB.Where("id = ?", c.Param("userId")).First(&user).Error; err != nil {
+		if err := models.DB.Preload("Books").Where("id = ?", c.Param("userId")).First(&user).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 			return
 		}
@@ -41,13 +42,13 @@ func (ctrl BookController) GetAll(c *gin.Context) {
 }
 
 type CreateBookInput struct {
-	Title  string `json:"title" binding:"required"`
-	Author string `json:"author" binding:"required"`
+	Title string `json:"title" binding:"required"`
 }
 
 func (ctrl BookController) Store(c *gin.Context) {
+	var userId = c.Param("userId")
 	var user models.User
-	if err := models.DB.Where("id = ?", c.Param("userId")).First(&user).Error; err != nil {
+	if err := models.DB.Where("id = ?", userId).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -58,7 +59,13 @@ func (ctrl BookController) Store(c *gin.Context) {
 		return
 	}
 
-	book := models.Book{Title: input.Title}
+	intUserId, err := strconv.Atoi(userId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	book := models.Book{Title: input.Title, UserID: uint(intUserId)}
 	models.DB.Create(&book)
 
 	cache.Remove(BOOK_CACHE_KEY)
@@ -72,8 +79,9 @@ type UpdateBookInput struct {
 }
 
 func (ctrl BookController) Update(c *gin.Context) {
+	var userId = c.Param("userId")
 	var book models.Book
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+	if err := models.DB.Where("id = ?", userId).First(&book).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -95,7 +103,7 @@ func (ctrl BookController) Update(c *gin.Context) {
 
 func (ctrl BookController) Delete(c *gin.Context) {
 	var book models.Book
-	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+	if err := models.DB.Where("id = ?", c.Param("userId")).First(&book).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
