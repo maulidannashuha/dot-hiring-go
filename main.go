@@ -1,12 +1,15 @@
 package main
 
 import (
+	"dot-hiring-go/models"
 	"dot-hiring-go/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	models.ConnectDatabase()
+
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
