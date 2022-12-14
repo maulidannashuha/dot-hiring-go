@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"dot-hiring-go/models"
-	"dot-hiring-go/utils"
 	"encoding/json"
 	"net/http"
 
@@ -11,12 +10,11 @@ import (
 
 type BookController struct{}
 
-var cache utils.Cache
-var CACHE_KEY = "BookController.GetAll"
+var BOOK_CACHE_KEY = "BookController.GetAll"
 
 func (ctrl BookController) GetAll(c *gin.Context) {
 	var user *models.User
-	var data = cache.Get(CACHE_KEY)
+	var data = cache.Get(BOOK_CACHE_KEY)
 
 	if data == "" {
 		if err := models.DB.Where("id = ?", c.Param("userId")).First(&user).Error; err != nil {
@@ -30,7 +28,7 @@ func (ctrl BookController) GetAll(c *gin.Context) {
 			return
 		}
 
-		cache.Set(CACHE_KEY, data)
+		cache.Set(BOOK_CACHE_KEY, data)
 	} else {
 		err := json.Unmarshal([]byte(data), &user)
 		if err != nil {
@@ -63,7 +61,7 @@ func (ctrl BookController) Store(c *gin.Context) {
 	book := models.Book{Title: input.Title}
 	models.DB.Create(&book)
 
-	cache.Remove(CACHE_KEY)
+	cache.Remove(BOOK_CACHE_KEY)
 
 	c.JSON(http.StatusOK, gin.H{"data": book})
 }
@@ -90,7 +88,7 @@ func (ctrl BookController) Update(c *gin.Context) {
 
 	models.DB.Model(&book).Updates(updateBook)
 
-	cache.Remove(CACHE_KEY)
+	cache.Remove(BOOK_CACHE_KEY)
 
 	c.JSON(http.StatusOK, gin.H{"data": book})
 }
@@ -104,7 +102,7 @@ func (ctrl BookController) Delete(c *gin.Context) {
 
 	models.DB.Delete(&book)
 
-	cache.Remove(CACHE_KEY)
+	cache.Remove(BOOK_CACHE_KEY)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"dot-hiring-go/models"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,9 +10,29 @@ import (
 
 type UserController struct{}
 
+var USER_CACHE_KEY = "UserController.GetAll"
+
 func (ctrl UserController) GetAll(c *gin.Context) {
-	var users []models.User
-	models.DB.Find(&users)
+	var users []*models.User
+	var data = cache.Get(BOOK_CACHE_KEY)
+
+	if data == "" {
+		models.DB.Find(&users)
+
+		data, err := json.Marshal(users)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		cache.Set(USER_CACHE_KEY, data)
+	} else {
+		err := json.Unmarshal([]byte(data), &users)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
