@@ -52,6 +52,8 @@ func (ctrl UserController) Store(c *gin.Context) {
 	user := models.User{Name: input.Name, Email: input.Email}
 	models.DB.Create(&user)
 
+	cache.Remove(USER_CACHE_KEY)
+
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
@@ -77,6 +79,8 @@ func (ctrl UserController) Update(c *gin.Context) {
 
 	models.DB.Model(&user).Updates(updateUser)
 
+	cache.Remove(USER_CACHE_KEY)
+
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
@@ -88,6 +92,8 @@ func (ctrl UserController) Delete(c *gin.Context) {
 	}
 
 	models.DB.Delete(&user)
+
+	cache.Remove(USER_CACHE_KEY)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }
