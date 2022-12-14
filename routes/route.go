@@ -13,15 +13,15 @@ var bookController = controllers.BookController{}
 func SetupRouter(r *gin.Engine) *gin.Engine {
 	r.GET("/", homeController.Welcome)
 
-	r.GET("/users", userController.GetAll)
-	r.POST("/users", userController.Store)
-	r.PUT("/users/:id", userController.Update)
-	r.DELETE("/users/:id", userController.Delete)
+	r.GET("/user", userController.GetAll)
+	r.POST("/user", userController.Store)
+	r.PUT("/user/:userId", userController.Update)
+	r.DELETE("/user/:userId", userController.Delete)
 
-	r.GET("/books", bookController.GetAll)
-	r.POST("/books", bookController.Store)
-	r.PUT("/books/:id", bookController.Update)
-	r.DELETE("/books/:id", bookController.Delete)
+	r.GET("/user/:userId/books", bookController.GetAll)
+	r.POST("/user/:userId/books", bookController.Store)
+	r.PUT("/user/:userId/books/:id", bookController.Update)
+	r.DELETE("/user/:userId/books/:id", bookController.Delete)
 
 	return r
 }

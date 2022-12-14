@@ -3,12 +3,14 @@ package main
 import (
 	"dot-hiring-go/models"
 	"dot-hiring-go/routes"
+	"dot-hiring-go/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	models.ConnectDatabase()
+	utils.SetupRedis()
 
 	// Disable Console Color
 	// gin.DisableConsoleColor()
