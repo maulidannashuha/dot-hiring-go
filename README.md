@@ -19,23 +19,23 @@ Table of contents
 
 Anda bisa install dengan cara :
 ```bash
-go get
+go get tidy
 ```
 
 ## Kode
-API yang ada dengan metode... user... bisa dijalankan dengan url endpoint
+Kemudian jalankan dengan perintah : 
+```bash
+go run main.go
+```
 
 ### Pattern
-Pattern yang digunakan adalah...
+Pattern yang digunakan adalah Model Controller Router
 
 ### Framework
-Framework yang digunakan adalah...
+Framework yang digunakan adalah Gin
 
 ### Relation
-Relation yang digunakan adalah...
-
-### Postman
-[Postman Collection](https://postman.com)
+Relation yang digunakan adalah user yang dapat memiliki banyak buku
 
 ## Video
-Video dapat dilihat pada...
+Video dapat dilihat pada https://www.loom.com/share/e46e4dae0f604c2bbe47a8c8e7da2960
