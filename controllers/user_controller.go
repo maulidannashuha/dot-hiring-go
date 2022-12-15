@@ -15,12 +15,12 @@ var USER_CACHE_KEY = "UserController.GetAll"
 
 func (ctrl UserController) GetAll(c *gin.Context) {
 	var users []*models.User
-	var data = cache.Get(BOOK_CACHE_KEY)
+	var data = cache.Get(USER_CACHE_KEY)
 
 	if data == "" {
 		models.DB.Find(&users)
 
-		data, err := json.Marshal(users)
+		data, err := json.Marshal(&users)
 		if err != nil {
 			utils.Logger(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
