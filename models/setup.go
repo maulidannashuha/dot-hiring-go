@@ -8,8 +8,15 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
+	setupDatabaseConnection("db/data.db")
+}
 
-	database, err := gorm.Open(sqlite.Open("db/data.db"), &gorm.Config{})
+func ConnectDatabaseTesting() {
+	setupDatabaseConnection("file::memory:?cache=shared")
+}
+
+func setupDatabaseConnection(databaseLocation string){
+	database, err := gorm.Open(sqlite.Open(databaseLocation), &gorm.Config{})
 
 	if err != nil {
 		panic("Failed to connect to database!")
