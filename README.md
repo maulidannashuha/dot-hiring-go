@@ -29,7 +29,9 @@ go run main.go
 ```
 
 ### Pattern
-Pattern yang digunakan adalah Model Controller Router
+Pattern yang digunakan adalah Model Controller Router. Pattern ini dipilih untuk memudahkan pembuatan aplikasi kecil terutama dengan hanya terdapat beberapa module. Dengan asumsi tersebut maka diambillah Model Controller Router sebagai pattern yang digunakan.
+
+Namun untuk aplikasi yang lebih besar DDD lebih disarankan untuk digunakan. Hal ini nantinya juga akan memudahkan ketika aplikasi dibuat menjadi microservices karena setiap layer sudah terisolasi.
 
 ### Framework
 Framework yang digunakan adalah Gin
