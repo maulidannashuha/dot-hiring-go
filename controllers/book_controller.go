@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"dot-hiring-go/models"
+	"dot-hiring-go/utils"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -19,12 +20,14 @@ func (ctrl BookController) GetAll(c *gin.Context) {
 
 	if data == "" {
 		if err := models.DB.Preload("Books").Where("id = ?", c.Param("userId")).First(&user).Error; err != nil {
+			utils.Logger(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 			return
 		}
 
 		data, err := json.Marshal(user)
 		if err != nil {
+			utils.Logger(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -33,6 +36,7 @@ func (ctrl BookController) GetAll(c *gin.Context) {
 	} else {
 		err := json.Unmarshal([]byte(data), &user)
 		if err != nil {
+			utils.Logger(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -49,18 +53,21 @@ func (ctrl BookController) Store(c *gin.Context) {
 	var userId = c.Param("userId")
 	var user models.User
 	if err := models.DB.Where("id = ?", userId).First(&user).Error; err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
 
 	var input CreateBookInput
 	if err := c.ShouldBindJSON(&input); err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	intUserId, err := strconv.Atoi(userId)
 	if err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -82,12 +89,14 @@ func (ctrl BookController) Update(c *gin.Context) {
 	var userId = c.Param("userId")
 	var book models.Book
 	if err := models.DB.Where("id = ?", userId).First(&book).Error; err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
 
 	var input UpdateBookInput
 	if err := c.ShouldBindJSON(&input); err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -104,6 +113,7 @@ func (ctrl BookController) Update(c *gin.Context) {
 func (ctrl BookController) Delete(c *gin.Context) {
 	var book models.Book
 	if err := models.DB.Where("id = ?", c.Param("userId")).First(&book).Error; err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}

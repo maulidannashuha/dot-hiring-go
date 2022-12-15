@@ -22,14 +22,14 @@ func SetupRedis() {
 func (r Cache) Set(key string, value any) {
 	err := rdb.Set(ctx, key, value, 0).Err()
 	if err != nil {
-		panic(err)
+		Logger(err)
 	}
 }
 
 func (r Cache) Get(key string) string {
 	val, err := rdb.Get(ctx, key).Result()
 	if err != nil {
-		// TODO: handle error
+		Logger(err)
 
 		return ""
 	}
@@ -40,6 +40,6 @@ func (r Cache) Get(key string) string {
 func (r Cache) Remove(key string) {
 	err := rdb.Do(ctx, "DEL", key).Err()
 	if err != nil {
-		panic(err)
+		Logger(err)
 	}
 }

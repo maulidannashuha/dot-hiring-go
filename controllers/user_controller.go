@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"dot-hiring-go/models"
+	"dot-hiring-go/utils"
 	"encoding/json"
 	"net/http"
 
@@ -21,6 +22,7 @@ func (ctrl UserController) GetAll(c *gin.Context) {
 
 		data, err := json.Marshal(users)
 		if err != nil {
+			utils.Logger(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -29,6 +31,7 @@ func (ctrl UserController) GetAll(c *gin.Context) {
 	} else {
 		err := json.Unmarshal([]byte(data), &users)
 		if err != nil {
+			utils.Logger(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -45,6 +48,7 @@ type CreateUserInput struct {
 func (ctrl UserController) Store(c *gin.Context) {
 	var input CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -65,12 +69,14 @@ type UpdateUserInput struct {
 func (ctrl UserController) Update(c *gin.Context) {
 	var user models.User
 	if err := models.DB.Where("id = ?", c.Param("userId")).First(&user).Error; err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
 
 	var input UpdateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -87,6 +93,7 @@ func (ctrl UserController) Update(c *gin.Context) {
 func (ctrl UserController) Delete(c *gin.Context) {
 	var user models.User
 	if err := models.DB.Where("id = ?", c.Param("userId")).First(&user).Error; err != nil {
+		utils.Logger(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
