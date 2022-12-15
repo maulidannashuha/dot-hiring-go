@@ -14,12 +14,14 @@ import (
 var bookController = BookController{}
 
 func TestBookGetAll(t *testing.T) {
-	models.DB.Create(models.User{
-		Name: "John",
+	r := tests.SetUp()
+
+	models.DB.Create(&models.User{
+		Name:  "John",
+		Email: "johndoe@admin.com",
 	})
 
 	mockResponse := `{"message":"Welcome..."}`
-	r := tests.SetUp()
 	r.GET("/", bookController.GetAll)
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
